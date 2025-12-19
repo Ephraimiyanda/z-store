@@ -2,6 +2,7 @@
 import { NavSidebar } from "@/components/nav-sidebar";
 import { PaginationBlock } from "@/components/pagination-block";
 import { ProductCard } from "@/components/product-card";
+import { ProductCardSkeleton } from "@/components/product-card-skeleton";
 import SearchInput from "@/components/search-input";
 import {
   Breadcrumb,
@@ -23,14 +24,15 @@ import { useEffect, useState } from "react";
 
 export default function Shop() {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
-  const { openProduct } = useProductModal();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<number | any>(
     searchParams.get("page") || 1
   );
+  const router = useRouter();
+  const pathname = usePathname();
+  const { setLocalProducts, openProduct } = useProductModal();
 
+  //fiter states for products
   const [filters, setFilters] = useState({
     searchQuery: searchParams.get("q") || "",
     sizes: searchParams.get("sizes")?.split(",") || [],
@@ -46,22 +48,26 @@ export default function Shop() {
     ratings: searchParams.get("ratings")?.split(",") || [],
   });
 
-  const { products } = useProducts(filters);
-  console.log(products);
-  //pagination logic
+  const { products, loading } = useProducts(filters);
 
+  //pagination logic
   const maxNoOfProducts = 16;
   const totalPages = Math.ceil(products.length / maxNoOfProducts);
   const startPage = (currentPage - 1) * maxNoOfProducts;
   const endPage = startPage + maxNoOfProducts;
 
+  //paginated data
+  const paginatedProducts =
+    products.length > 0 && products ? products?.slice(startPage, endPage) : [];
+
+  //change page
   function changePage(page: number) {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
-  const paginatedProducts = products?.slice(startPage, endPage);
 
+  //selecting and unselecting filter states
   const toggleArray = (key: string, value: string) => {
     setFilters((prev: any) => {
       const exists = prev[key].includes(value);
@@ -74,6 +80,7 @@ export default function Shop() {
     });
   };
 
+  //setting url for filter states
   const updateURL = useDebounce((updated) => {
     const params = new URLSearchParams();
     if (updated.page) params.set("page", updated.page);
@@ -94,8 +101,20 @@ export default function Shop() {
 
     if (updated.price[1]) params.set("maxPrice", String(updated.price[1]));
 
+    //preserve if there is product open
+    const currentProductId = searchParams.get("product");
+    if (currentProductId) {
+      params.set("product", currentProductId);
+    }
     router.replace(`${pathname}?${params.toString()}`);
   }, 500);
+
+  // Keep the modal context updated with the current page's products
+  useEffect(() => {
+    if (paginatedProducts.length > 0) {
+      setLocalProducts(paginatedProducts);
+    }
+  }, [products, setLocalProducts]);
 
   useEffect(() => {
     updateURL(filters);
@@ -181,7 +200,13 @@ export default function Shop() {
               </div>
             </div>
           </div>
-          <div className="grid lg:grid-cols-3 grid-cols-2 md:gap-x-12 gap-4 pt-4 py-40 w-full">
+          <div className="grid lg:grid-cols-3 grid-cols-2 md:gap-x-12 gap-4 py-20 pt-4 w-full">
+            {loading && <ProductCardSkeleton count={6} className="w-full" />}
+            {!loading && paginatedProducts.length < 1 && (
+              <div className="justify-center items-center flex py-4 w-full text-center col-start-2 h-[50vh]">
+                <p>No Items Found</p>
+              </div>
+            )}
             {paginatedProducts &&
               paginatedProducts.map((product: Product) => (
                 <ProductCard

@@ -2,8 +2,9 @@
 
 import React from "react";
 import Image from "next/image";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, Minus, Plus } from "lucide-react";
 import Link from "next/link";
+import { useCart } from "@/providers/cart-provider";
 
 // Mock Cart Data
 const CART_ITEMS = [
@@ -26,12 +27,8 @@ const CART_ITEMS = [
 ];
 
 export default function CheckoutPage() {
-  const subtotal = CART_ITEMS.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
+  const { cartTotal, items, updateQuantity } = useCart();
   const shipping = "Calculated at next step";
-  const total = subtotal; // Shipping is TBD
 
   return (
     <div className=" py-12 flex justify-center ">
@@ -139,9 +136,8 @@ export default function CheckoutPage() {
 
               {/* Cart Items List */}
               <div className="space-y-8 mb-10">
-                {CART_ITEMS.map((item) => (
-                  <div key={item.id} className="flex gap-4">
-                    {/* Image */}
+                {items.map((item) => (
+                  <div key={item._id} className="flex gap-4">
                     <div className="relative w-20 h-24 bg-gray-200 shrink-0 border border-gray-200">
                       <Image
                         src={item.image}
@@ -154,24 +150,45 @@ export default function CheckoutPage() {
                     {/* Details */}
                     <div className="flex-1 flex justify-between">
                       <div className="flex flex-col justify-between py-1">
-                        <div>
+                        <div className="flex flex-col justify-between ">
                           <h3 className="font-medium text-sm text-gray-900">
                             {item.name}
                           </h3>
-                          <p className="text-xs text-gray-500 mt-1">
-                            {item.variant}
-                          </p>
+                          <p className="text-gray-500">{item.size}</p>
                         </div>
-                        <p className="text-sm font-semibold text-blue-900">
-                          ({item.quantity})
-                        </p>
+                        <div>
+                          <div className="flex items-center =justify-normal gap-4  w-full">
+                            <button
+                              onClick={() =>
+                                updateQuantity(item._id, item.quantity - 1)
+                              }
+                              className="w-5 h-5 flex items-center justify-center  hover:bg-gray-100 hover:border-black transition-colors disabled:opacity-50 cursor-pointer"
+                            >
+                              <Minus className="w-4 h-4" />
+                            </button>
+
+                            <p className="text-sm font-semibold">
+                              {item.quantity}
+                            </p>
+                            <button
+                              onClick={() =>
+                                updateQuantity(item._id, item.quantity + 1)
+                              }
+                              className="w-5 h-5 flex items-center justify-center  hover:bg-gray-100 hover:border-black transition-colors cursor-pointer"
+                            >
+                              <Plus className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
                       </div>
 
                       <div className="flex flex-col justify-between items-end py-1">
                         <button className="text-xs underline text-gray-500 hover:text-black">
                           Change
                         </button>
-                        <p className="text-sm font-medium">${item.price}</p>
+                        <p className="text-sm font-medium">
+                          ${item.price.toLocaleString()}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -182,7 +199,9 @@ export default function CheckoutPage() {
               <div className="border-t border-gray-200 pt-6 space-y-4">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Subtotal</span>
-                  <span className="font-medium">${subtotal.toFixed(2)}</span>
+                  <span className="font-medium">
+                    ${cartTotal.toLocaleString()}
+                  </span>
                 </div>
 
                 <div className="flex justify-between text-sm items-center">
@@ -198,7 +217,9 @@ export default function CheckoutPage() {
                 <span className="text-md font-medium">Total</span>
                 <div className="flex items-end gap-2">
                   <span className="text-xs text-gray-500 mb-1">USD</span>
-                  <span className="text-xl font-bold">${total.toFixed(2)}</span>
+                  <span className="text-xl font-bold">
+                    ${cartTotal.toLocaleString()}
+                  </span>
                 </div>
               </div>
             </div>

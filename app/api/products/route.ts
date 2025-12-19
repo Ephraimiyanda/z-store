@@ -45,8 +45,6 @@ export async function GET(request: Request) {
     if (tags.length > 0 && tags[0] !== "") {
       query.tags = { $in: tags };
     }
-
-    // --- Price Range ($gte and $lte) ---
     if (minPrice || maxPrice) {
       query.price = {};
       if (minPrice) query.price.$gte = Number(minPrice);

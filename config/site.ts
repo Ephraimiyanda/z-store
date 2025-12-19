@@ -30,42 +30,12 @@ export const siteConfig = {
     "SUITS",
     "COATS",
   ],
-  products: [
-    {
-      id: "1",
-      name: "Embroidered ticket shirt",
-      price: 99,
-      images: [
-        "/merch.png",
-        "/merch-2.png",
-        "/merch.png",
-        "/merch.png",
-        "/merch.png",
-      ],
-    },
-    {
-      id: "2",
-      name: "Abstract Print Shirt",
-      price: 120,
-      images: [
-        "/merch.png",
-        "/merch-2.png",
-        "/merch.png",
-        "/merch.png",
-        "/merch.png",
-      ],
-    },
-    {
-      id: "3",
-      name: "Linen Trousers",
-      price: 89,
-      images: [
-        "/merch.png",
-        "/merch-2.png",
-        "/merch.png",
-        "/merch.png",
-        "/merch.png",
-      ],
-    },
+  heroImages: [
+    "/Denim Jacket-1.jpg",
+    "/Denim Jacket-5.jpg",
+    "/Fleece Hoodie-1.jpg",
+    "/Fleece Polo-1.jpg",
+    "/Fleece Polo-4.jpg",
+    "/sweatshirt-2.jpg",
   ],
 };

@@ -1,11 +1,16 @@
-import { Filters } from "@/types";
+import { Filters, Product } from "@/types";
 import { useEffect, useState } from "react";
 
-export function useSingleProduct(_id: string) {
-  const [product, setProduct] = useState();
+export function useSingleProduct(_id: string | null) {
+  const [product, setProduct] = useState<Product | null>();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!_id) {
+      setProduct(null);
+      setLoading(false);
+      return;
+    }
     const controller = new AbortController();
 
     async function fetchProducts() {

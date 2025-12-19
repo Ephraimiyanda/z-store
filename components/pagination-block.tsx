@@ -21,7 +21,6 @@ export function PaginationBlock({
   totalPages,
   onPageChange,
 }: PaginationBlockProps) {
-  // If there is only 1 page (or 0), don't show pagination
   if (totalPages <= 1) return null;
 
   const handlePageChange = (page: number) => {
@@ -33,7 +32,6 @@ export function PaginationBlock({
     <div className="mt-auto py-8 w-full flex justify-center">
       <Pagination>
         <PaginationContent>
-          {/* Previous Button */}
           <PaginationItem>
             <PaginationPrevious
               onClick={() => handlePageChange(currentPage - 1)}
@@ -49,7 +47,6 @@ export function PaginationBlock({
           {Array.from({ length: totalPages }).map((_, i) => {
             const pageNumber = i + 1;
 
-            // Logic: Show First, Last, Current, and Neighbors (Current +/- 1)
             const isFirst = pageNumber === 1;
             const isLast = pageNumber === totalPages;
             const isCurrent = pageNumber === currentPage;
@@ -71,8 +68,6 @@ export function PaginationBlock({
               );
             }
 
-            // Render Ellipsis (...)
-            // Show ellipsis if there is a gap between the current logic block and the ends
             if (
               (pageNumber === currentPage - 2 && pageNumber > 1) ||
               (pageNumber === currentPage + 2 && pageNumber < totalPages)
@@ -87,7 +82,6 @@ export function PaginationBlock({
             return null;
           })}
 
-          {/* Next Button */}
           <PaginationItem>
             <PaginationNext
               onClick={() => handlePageChange(currentPage + 1)}

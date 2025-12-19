@@ -5,9 +5,8 @@ export default function cloudinaryLoader({
   quality,
 }: {
   src: string;
-  width: string | "300";
-  quality: string;
+  width: number;
+  quality?: number;
 }) {
-  const params = ["f_auto", "c_limit", `w_${width}`, `q_${quality || "auto"}`];
-  return `https://res.cloudinary.com/${params.join(",")}${src}`;
+  return `${src}/f_auto,c_limit,w_${width},q_${quality || "auto"}`;
 }

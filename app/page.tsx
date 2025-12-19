@@ -10,6 +10,7 @@ import HorizontalGallery from "@/components/horizontal-gallery";
 import { ProductCard } from "@/components/product-card";
 import { ProductCardSkeleton } from "@/components/product-card-skeleton";
 import SearchInput from "@/components/search-input";
+import { siteConfig } from "@/config/site";
 import { useProducts } from "@/hooks/use-products";
 import { CarouselRoot } from "@/providers/carousel-provider";
 import { useProductModal } from "@/providers/product-modal-provider";
@@ -18,17 +19,23 @@ import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
-  const { openProduct } = useProductModal();
-
+  const { setLocalProducts, openProduct } = useProductModal();
   const { products, loading } = useProducts({
     collections: ["new"],
   });
-  const xivCollection = products && products.slice(4, 7);
+  const xivCollection = products.length > 0 ? products?.slice(4, 7) : [];
+
+  useEffect(() => {
+    if (products.length > 0) {
+      setLocalProducts(products);
+    }
+  }, [products, setLocalProducts]);
+
   return (
     <div className="flex min-h-screen items-center justify-center font-sans flex-col">
       <main className="flex min-h-screen w-full flex-col items-center gap-24 py-16 px-6 dark:bg-black sm:items-start mx-auto max-w-7xl">
@@ -66,7 +73,7 @@ export default function Home() {
                   {new Date().getFullYear()}
                 </p>
               </div>
-              <div className=" flex justify-between gap-8">
+              <div className="hidden md:flex justify-between gap-8">
                 <button
                   className="bg-[#D9D9D9] px-4 h-10 w-66 flex justify-between items-center rounded-none text-black hover:text-[#5E5E5E] cursor-pointer group transition-all"
                   onClick={() => router.push(`/shop?q=${searchQuery}`)}
@@ -88,53 +95,33 @@ export default function Home() {
             </div>
             <div className="h-full flex overflow-auto flex-nowrap max-w-full">
               <CarouselContainer>
-                <CarouselItem>
-                  <Image
-                    src={"/merch.png"}
-                    alt="merch"
-                    width={1000}
-                    height={1000}
-                    className="h-94 min-w-92"
-                  ></Image>
-                </CarouselItem>
-                <CarouselItem>
-                  <Image
-                    src={"/merch.png"}
-                    alt="merch"
-                    width={1000}
-                    height={1000}
-                    className="h-94 min-w-92"
-                  ></Image>
-                </CarouselItem>{" "}
-                <CarouselItem>
-                  <Image
-                    src={"/merch.png"}
-                    alt="merch"
-                    width={1000}
-                    height={1000}
-                    className="h-94 min-w-92"
-                  ></Image>
-                </CarouselItem>{" "}
-                <CarouselItem>
-                  <Image
-                    src={"/merch.png"}
-                    alt="merch"
-                    width={1000}
-                    height={1000}
-                    className="h-94 min-w-92"
-                  ></Image>
-                </CarouselItem>{" "}
-                <CarouselItem>
-                  <Image
-                    src={"/merch.png"}
-                    alt="merch"
-                    width={1000}
-                    height={1000}
-                    className="h-94 min-w-92"
-                  ></Image>
-                </CarouselItem>
+                {siteConfig.heroImages.map((image, i) => (
+                  <CarouselItem key={i}>
+                    <Image
+                      src={image}
+                      alt="merch"
+                      width={1000}
+                      height={1000}
+                      className="h-94 min-w-92 object-cover"
+                    ></Image>
+                  </CarouselItem>
+                ))}
               </CarouselContainer>
             </div>
+
+            <button
+              className="bg-[#D9D9D9] px-4 h-10 w-66 flex md:hidden justify-between items-center rounded-none text-black hover:text-[#5E5E5E] cursor-pointer group transition-all"
+              onClick={() => router.push(`/shop?q=${searchQuery}`)}
+            >
+              <p className=" font-medium">GO TO SHOP</p>
+              <Image
+                src={"/arrow-right.svg"}
+                alt="button arrow"
+                width={50}
+                height={12}
+                className="group-hover:translate-x-1 transition-transform"
+              ></Image>
+            </button>
           </CarouselRoot>
         </section>
         <section className="flex flex-col gap-7 w-full max-w-full overflow-auto">
@@ -143,7 +130,10 @@ export default function Home() {
               <p>NEW</p>
               <p>THIS WEEK</p>
             </h1>
-            <Link className="text-[#5E5E5E] justify-end self-end" href={"#"}>
+            <Link
+              className="text-[#5E5E5E] justify-end self-end"
+              href={"/shop?tags=new"}
+            >
               See All
             </Link>
           </div>
@@ -152,10 +142,21 @@ export default function Home() {
               <div className="flex flex-col gap-8 w-full overflow-auto">
                 <div className="overflow-auto max-w-full">
                   <CarouselContainer className="no-scrollbar">
-                    {loading && !products ? (
-                      <ProductCardSkeleton count={3} />
-                    ) : (
-                      products.map((product: Product) => (
+                    {loading && (
+                      <ProductCardSkeleton
+                        count={4}
+                        className="w-76  max-h-[430px]"
+                      />
+                    )}
+                    {!loading && products.length < 1 && (
+                      <div className="justify-center items-center flex py-4 w-full text-center">
+                        <p>No Items found</p>
+                      </div>
+                    )}
+
+                    {products &&
+                      products.length > 0 &&
+                      products?.map((product: Product) => (
                         <CarouselItem key={product._id}>
                           <ProductCard
                             product={product}
@@ -165,8 +166,7 @@ export default function Home() {
                             imageheight="313px"
                           ></ProductCard>
                         </CarouselItem>
-                      ))
-                    )}
+                      ))}
                   </CarouselContainer>
                 </div>
                 <div className="flex gap-4 justify-center">
@@ -205,15 +205,24 @@ export default function Home() {
             <div className="flex flex-col gap-8 w-full overflow-auto">
               <div className="overflow-auto max-w-full">
                 <div className="no-scrollbar grid md:grid-cols-3 grid-cols-1 gap-8">
-                  {xivCollection.map((product: Product) => (
-                    <ProductCard
-                      onClick={() => openProduct(product)}
-                      key={product._id}
-                      product={product}
-                      className="w-full"
-                      imageheight="376px"
-                    ></ProductCard>
-                  ))}
+                  {loading && (
+                    <ProductCardSkeleton count={3} className="w-full" />
+                  )}
+                  {!loading && xivCollection.length < 1 && (
+                    <div className="justify-center items-center flex py-4 w-full text-center col-start-2">
+                      <p>No Items In The XIV Collection</p>
+                    </div>
+                  )}
+                  {xivCollection &&
+                    xivCollection.map((product: Product) => (
+                      <ProductCard
+                        onClick={() => openProduct(product)}
+                        key={product._id}
+                        product={product}
+                        className="w-full"
+                        imageheight="376px"
+                      ></ProductCard>
+                    ))}
                 </div>
               </div>
               <div className="flex gap-4 justify-center">

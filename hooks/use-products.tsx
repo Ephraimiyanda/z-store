@@ -3,14 +3,12 @@ import { useEffect, useState } from "react";
 
 export function useProducts(filters: Filters) {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
 
     async function fetchProducts() {
-      setLoading(true);
-
       const query = new URLSearchParams();
 
       if (filters.searchQuery) query.set("q", filters.searchQuery);
@@ -37,8 +35,6 @@ export function useProducts(filters: Filters) {
         const data = await res.json();
         if (data) {
           setProducts(data);
-        } else {
-          setProducts([]);
         }
       } catch (e: unknown) {
         //@ts-ignore
@@ -51,7 +47,7 @@ export function useProducts(filters: Filters) {
     fetchProducts();
 
     return () => controller.abort();
-  }, [JSON.stringify(filters)]); // deep compare
+  }, [JSON.stringify(filters)]);
 
   return { products, loading };
 }

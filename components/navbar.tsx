@@ -17,16 +17,19 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import Link from "next/link";
+import { Badge } from "./ui/badge";
+import { useCart } from "@/providers/cart-provider";
 
 export function Navbar() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { openProduct, closeProduct } = useProductModal();
-
+  const { closeProduct } = useProductModal();
+  const { totalItems } = useCart();
   const isProductView = searchParams.has("product");
 
   return (
     <nav className="top-0 sticky z-80 bg-white">
+      {/* mobile view */}
       <div className="md:hidden grid grid-cols-[1fr_auto_1fr] items-center px-4 py-4 w-full border-b border-gray-100">
         <div className="flex justify-start">
           {isProductView ? (
@@ -47,7 +50,7 @@ export function Navbar() {
               <DropdownMenuTrigger asChild>
                 <button
                   onClick={closeProduct}
-                  className="flex justify-center items-center cursor-pointer"
+                  className="flex justify-center items-center cursor-pointer relative"
                 >
                   <Image
                     src={"/hamburger.svg"}
@@ -86,9 +89,17 @@ export function Navbar() {
         <div className="flex justify-end gap-3">
           <button
             onClick={() => router.push("/check-out")}
-            className="w-9 h-9 rounded-full border-4 border-black flex items-center justify-center bg-white text-black"
+            className="w-9 h-9 rounded-full border-4 border-black flex items-center justify-center bg-white text-black relative"
           >
             <Handbag className="w-4 h-4" />
+            {totalItems > 0 && (
+              <Badge
+                variant={"outline"}
+                className="absolute -top-2 -right-2 z-10 bg-white text-black font-bold border-2"
+              >
+                {totalItems}
+              </Badge>
+            )}
           </button>
 
           <button className="w-9 h-9 rounded-full bg-black flex items-center justify-center text-white">
@@ -96,6 +107,8 @@ export function Navbar() {
           </button>
         </div>
       </div>
+
+      {/* desktop view */}
       <div className="hidden md:block">
         <NavigationMenu className="py-4 px-4 flex justify-between gap-4 mx-auto max-w-7xl items-center w-full ">
           {isProductView && (
@@ -139,14 +152,24 @@ export function Navbar() {
             >
               <Heart />
             </Button>
+
             <Button
               size={"lg"}
-              className="rounded-3xl text-medium font-normal text-sm text-white px-2 cursor-pointer"
+              className="relative rounded-3xl text-medium font-normal text-sm text-white px-2 cursor-pointer"
               onClick={() => router.push("/check-out")}
             >
               Cart
-              <Handbag />
+              <Handbag size={28} className="w-18" />
+              {totalItems > 0 && (
+                <Badge
+                  variant={"outline"}
+                  className="absolute -top-2 -right-2 z-10 bg-white text-black font-bold border-2"
+                >
+                  {totalItems}
+                </Badge>
+              )}
             </Button>
+
             <Button
               size={"icon-lg"}
               className="rounded-[50%]  text-medium text-sm text-white  cursor-pointer"
