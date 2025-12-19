@@ -5,6 +5,7 @@ import { ProductModalProvider } from "@/providers/product-modal-provider";
 import localFont from "next/font/local";
 import { CartProvider } from "@/providers/cart-provider";
 import { AppProvider } from "@/providers/AppProvider";
+import { Suspense } from "react";
 // 2. Configure the font
 const beatrice = localFont({
   src: [
@@ -43,10 +44,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${beatrice.variable} antialiased font-beatrice `}>
-        <AppProvider>
-          <Navbar />
-          {children}
-        </AppProvider>
+        <Suspense fallback={null}>
+          <AppProvider>
+            <Navbar />
+            {children}
+          </AppProvider>
+        </Suspense>
       </body>
     </html>
   );
