@@ -56,8 +56,8 @@ export function ProductCard({
         <p className="text-sm font-medium text-gray-500 capitalize">
           {product.tags[0]}
         </p>
-        <div className="flex justify-between items-start text-base font-medium">
-          <p>{product?.name}</p>
+        <div className="flex flex-col justify-between items-start text-base font-medium">
+          <p className=" w-full truncate">{product?.name}</p>
           <span>${product?.price.toLocaleString()}</span>
         </div>
       </div>

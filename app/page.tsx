@@ -64,7 +64,7 @@ export default function Home() {
           <CarouselRoot>
             <div className="flex flex-col md:justify-between gap-8 ">
               <div className="flex flex-col gap-2">
-                <h1 className="font-extrabold text-5xl">
+                <h1 className="font-extrabold sm:text-5xl text-3xl">
                   NEW <br />
                   COLLECTION
                 </h1>
@@ -126,7 +126,7 @@ export default function Home() {
         </section>
         <section className="flex flex-col gap-7 w-full max-w-full overflow-auto">
           <div className="flex justify-between">
-            <h1 className="font-extrabold text-5xl">
+            <h1 className="font-extrabold sm:text-5xl text-3xl">
               <p>NEW</p>
               <p>THIS WEEK</p>
             </h1>
@@ -179,12 +179,12 @@ export default function Home() {
         </section>
         <section className="flex flex-col gap-7 w-full max-w-full overflow-auto">
           <div className="flex flex-col md:flex-row gap-4 justify-between">
-            <h1 className="font-extrabold text-5xl">
+            <h1 className="font-extrabold sm:text-5xl text-3xl">
               <p>XIV</p>
               <p>COLLECTIONS</p>
               <p>23-25</p>
             </h1>
-            <div className="gap-16 flex">
+            <div className="gap-16 flex sm:justify-normal justify-between">
               <div>
                 <p>Filters(+)</p>
               </div>
@@ -239,7 +239,7 @@ export default function Home() {
         </section>
         <section className="w-full">
           <div className="max-w-2xl text-center flex flex-col gap-2 mx-auto">
-            <h3 className="font-base font-beatrice text-5xl">
+            <h3 className="font-base font-beatrice sm:text-5xl text-3xl">
               Our Approach to fashion design
             </h3>
             <p className="font-light text-base">

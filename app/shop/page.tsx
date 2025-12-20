@@ -172,7 +172,7 @@ export default function Shop() {
                 </button>
               </div>
               <div className="overflow-x-auto w-full">
-                <div className="flex flex-wrap gap-x-4 gap-y-1">
+                <div className="flex flex-wrap gap-1 sm:gap-x-4 gap-y-1">
                   {siteConfig.categories.map((category) => {
                     const isSelected = filters?.categories?.includes(
                       category.toLocaleLowerCase()
@@ -200,7 +200,7 @@ export default function Shop() {
               </div>
             </div>
           </div>
-          <div className="grid lg:grid-cols-3 grid-cols-2 md:gap-x-12 gap-4 py-20 pt-4 w-full">
+          <div className="grid lg:grid-cols-3 grid-cols-2 md:gap-x-12 gap-4 py-12 pt-4 w-full">
             {loading && <ProductCardSkeleton count={6} className="w-full" />}
             {!loading && paginatedProducts.length < 1 && (
               <div className="justify-center items-center flex py-4 w-full text-center col-start-2 h-[50vh]">
@@ -213,7 +213,7 @@ export default function Shop() {
                   onClick={() => openProduct(product)}
                   key={product._id}
                   product={product}
-                  className="min-w-42 "
+                  className="min-w-39 sm:h-full h-78"
                   imageheight="314px"
                 ></ProductCard>
               ))}

@@ -89,7 +89,7 @@ export function ProductDetailsModal({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.4 }}
-            className="flex flex-col pt-4 w-full md:max-w-75 border border-[#A3A3A3] px-4 py-2 h-fit bg-white relative"
+            className="flex flex-col pt-4 w-full md:max-w-75 sm:border sm:border-[#A3A3A3] sm:px-4 py-2 h-fit bg-white relative"
           >
             <div className="flex justify-end mb-4">
               <Heart className="w-5 h-5 text-gray-600" />

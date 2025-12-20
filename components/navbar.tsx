@@ -61,7 +61,7 @@ export function Navbar() {
                   />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-40 flex flex-col gap-2 justify-around px-2 ml-4 py-4">
+              <DropdownMenuContent className="w-40 flex flex-col gap-2 justify-around px-2 ml-4 py-4 relative top-8">
                 <DropdownMenuItem asChild>
                   <Link href="/">Home</Link>
                 </DropdownMenuItem>
